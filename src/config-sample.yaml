@@ -1,0 +1,9 @@
+interval: 30
+debug: 0
+license:
+  - name: <VENDOR1>
+    lmutilpath: <DIR>/lmutil
+    licensepath: <PORT1>@<SERVER1>
+  - name: <VENDOR2>
+    lmutilpath: <DIR>/lmutil
+    licensepath: <PORT2>@<SERVER2>
