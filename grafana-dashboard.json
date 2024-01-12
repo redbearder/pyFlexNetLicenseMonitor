@@ -166,9 +166,9 @@
           "exemplar": false,
           "expr": "feature_inuse_count_peruser_total{vendor_name=\"$vendor_name\", server=\"$server\", feature=~\"$feature\"} ",
           "format": "table",
-          "instant": false,
+          "instant": true,
           "legendFormat": "{{username}}-{{feature}}",
-          "range": true,
+          "range": false,
           "refId": "A"
         }
       ],
@@ -228,6 +228,447 @@
               {
                 "desc": true,
                 "field": "Value (lastNotNull)"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "b69e8fdc-b890-4553-bf78-675ded37139f"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "feature"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 200
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "username"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 200
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "vendor_name"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 150
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value (lastNotNull)"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "使用中"
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "gradient",
+                  "type": "gauge"
+                }
+              },
+              {
+                "id": "max"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 50
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 13,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "10.1.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "b69e8fdc-b890-4553-bf78-675ded37139f"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "feature_inuse_count_peruser_total{vendor_name=\"$vendor_name\", server=\"$server\", feature=~\"$feature\"} ",
+          "format": "table",
+          "instant": false,
+          "legendFormat": "{{username}}-{{feature}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Feature Inuse Count Per User Total",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "application": true,
+              "cluster": true,
+              "environment": true,
+              "instance": true,
+              "job": true,
+              "prometheus": true,
+              "prometheus_replica": true,
+              "region": true,
+              "team": true,
+              "vendor_name": false
+            },
+            "indexByName": {},
+            "renameByName": {}
+          }
+        },
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "Value": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "feature": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "username": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "vendor_name": {
+                "aggregations": [],
+                "operation": "groupby"
+              }
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Value (sum)"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "b69e8fdc-b890-4553-bf78-675ded37139f"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "feature"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 200
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "username"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 200
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "vendor_name"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 150
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value (lastNotNull)"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "使用中"
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "gradient",
+                  "type": "gauge"
+                }
+              },
+              {
+                "id": "max"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 50
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 14,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "10.1.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "b69e8fdc-b890-4553-bf78-675ded37139f"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "feature_inuse_count_peruser_total{vendor_name=\"$vendor_name\", server=\"$server\", feature=~\"$feature\"} ",
+          "format": "table",
+          "instant": false,
+          "legendFormat": "{{username}}-{{feature}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Feature Inuse Duration Per User Total",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "application": true,
+              "cluster": true,
+              "environment": true,
+              "instance": true,
+              "job": true,
+              "prometheus": true,
+              "prometheus_replica": true,
+              "region": true,
+              "team": true,
+              "vendor_name": false
+            },
+            "indexByName": {},
+            "renameByName": {}
+          }
+        },
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "Value": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "feature": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "username": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "vendor_name": {
+                "aggregations": [],
+                "operation": "groupby"
+              }
+            }
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "binary": {
+              "left": "Value (sum)",
+              "operator": "*",
+              "reducer": "sum",
+              "right": "30"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Value (sum) * 30"
               }
             ]
           }
@@ -478,7 +919,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 0
+        "y": 8
       },
       "id": 2,
       "options": {
@@ -679,10 +1120,10 @@
         ]
       },
       "gridPos": {
-        "h": 5,
+        "h": 7,
         "w": 24,
         "x": 0,
-        "y": 8
+        "y": 16
       },
       "id": 9,
       "options": {
@@ -960,10 +1401,10 @@
         ]
       },
       "gridPos": {
-        "h": 5,
+        "h": 6,
         "w": 24,
         "x": 0,
-        "y": 13
+        "y": 23
       },
       "id": 10,
       "options": {
@@ -1140,10 +1581,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 24,
         "x": 0,
-        "y": 18
+        "y": 29
       },
       "id": 5,
       "options": {
@@ -1239,10 +1680,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 6,
         "w": 24,
         "x": 0,
-        "y": 26
+        "y": 38
       },
       "id": 11,
       "options": {
@@ -1610,7 +2051,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 34
+        "y": 44
       },
       "id": 7,
       "options": {
@@ -1814,10 +2255,10 @@
         ]
       },
       "gridPos": {
-        "h": 6,
+        "h": 13,
         "w": 24,
         "x": 0,
-        "y": 40
+        "y": 50
       },
       "id": 1,
       "options": {
@@ -1933,7 +2374,7 @@
       },
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": "27000@10.190.64.48",
           "value": "27000@10.190.64.48"
         },
@@ -1992,13 +2433,13 @@
     ]
   },
   "time": {
-    "from": "now-12h",
+    "from": "now-24h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Vendor License Feature Overview",
   "uid": "bd4c3726-790b-4af5-8c30-b5029e166679",
-  "version": 57,
+  "version": 64,
   "weekStart": ""
 }
