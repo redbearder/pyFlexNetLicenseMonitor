@@ -162,50 +162,120 @@ def get_format_stat_list(stat_list: list):
 
 
 def export_vendor_feature_count(feature_active_count_gauge: Gauge, format_feature_list: list, vendor_name: str,
-                                server: str):
+                                server: str, feature_pn_map:dict):
     for f in format_feature_list:
+        pn = "NONE"
+        if f['feature'] in feature_pn_map:
+            pn = feature_pn_map[f['feature']]
         expires = f['expires'][:3] + f['expires'][3].upper() + f['expires'][4:]
         expire_date = datetime.strptime(expires, '%d-%b-%Y')
         if expire_date > datetime.now():
-            feature_active_count_gauge.labels(vendor_name, server, f['feature'], f['version'], f['vendor'])\
+            feature_active_count_gauge.labels(vendor_name, server, f['feature'], f['version'], pn)\
                 .set(f['count'])
 
 
 def export_vendor_feature_expires(feature_expires_gauge: Gauge, format_feature_list: list, vendor_name: str,
-                                  server: str):
+                                  server: str, feature_pn_map:dict):
     for f in format_feature_list:
+        pn = "NONE"
+        if f['feature'] in feature_pn_map:
+            pn = feature_pn_map[f['feature']]
         expires = f['expires'][:3] + f['expires'][3].upper() + f['expires'][4:]
         expire_date = datetime.strptime(expires, '%d-%b-%Y')
-        feature_expires_gauge.labels(vendor_name, server, f['feature'], f['version'], f['vendor'])\
+        feature_expires_gauge.labels(vendor_name, server, f['feature'], f['version'], f['vendor'], pn)\
             .set(expire_date.timestamp())
 
 
 def export_vendor_feature_inuse_count(feature_inuse_count_gauge: Gauge, format_stat_list: list, vendor_name: str,
-                                      server: str):
+                                      server: str, feature_pn_map:dict):
     for f in format_stat_list:
-        feature_inuse_count_gauge.labels(vendor_name, server, f['feature_name']).set(len(f['feature_user_list']))
+        pn = "NONE"
+        if f['feature_name'] in feature_pn_map:
+            pn = feature_pn_map[f['feature_name']]
+        feature_inuse_count_gauge.labels(vendor_name, server, f['feature_name'], pn).set(len(f['feature_user_list']))
 
 
 def export_vendor_feature_queue_count(feature_queue_count_gauge: Gauge, format_stat_list: list, vendor_name: str,
-                                      server: str):
+                                      server: str, feature_pn_map:dict):
     for f in format_stat_list:
         count = 0
+        pn = "NONE"
+        if f['feature_name'] in feature_pn_map:
+            pn = feature_pn_map[f['feature_name']]
         for queue in f['feature_queue_list']:
             count += queue['count']
-        feature_queue_count_gauge.labels(vendor_name, server, f['feature_name']).set(count)
+        feature_queue_count_gauge.labels(vendor_name, server, f['feature_name'], pn).set(count)
 
 
 def export_vendor_feature_inuse_startts(feature_inuse_startts_gauge: Gauge, format_stat_list: list, vendor_name: str,
-                                        server: str):
+                                        server: str, feature_pn_map:dict):
     for f in format_stat_list:
+        pn = "NONE"
+        if f['feature_name'] in feature_pn_map:
+            pn = feature_pn_map[f['feature_name']]
         for user in f['feature_user_list']:
             feature_inuse_startts_gauge.labels(vendor_name, server, f['feature_name'], user['username'],
-                                               user['jobhost'],user['feature_version']).set(user['start_ts'])
+                                               user['jobhost'],user['feature_version'], pn).set(user['start_ts'])
 
 
 def export_vendor_feature_inuse_count_peruser(feature_inuse_count_peruser_counter: Counter, format_stat_list: list,
-                                              vendor_name: str, server: str):
+                                              vendor_name: str, server: str, feature_pn_map:dict):
     for f in format_stat_list:
+        pn = "NONE"
+        if f['feature_name'] in feature_pn_map:
+            pn = feature_pn_map[f['feature_name']]
         for user in f['feature_user_list']:
-            feature_inuse_count_peruser_counter.labels(vendor_name, server, f['feature_name'], user['username'])\
+            feature_inuse_count_peruser_counter.labels(vendor_name, server, f['feature_name'], user['username'],
+                                                       pn)\
                 .inc()
+
+
+# add function to map feature and product id
+def read_lic_file(file_path:str, debug=0) -> list:
+    if debug:
+        with open("snpslmd.txt", "r") as f:
+            lines = f.readlines()
+            return lines
+    else:
+        with open(file_path, "r") as f:
+            lines = f.readlines()
+            return lines
+
+def get_synopsys_feature_pn_map(lic_lines) -> dict:
+    d = {}
+    feature_name = None
+    for line in lic_lines:
+        if line.startswith("INCREMENT"):
+            line_col = line.split(" ")
+            feature_name = line_col[1]
+        else:
+            if "SN=TK" in line:
+                line_col = line.split(":")
+                if line_col[1] != "0":
+                    d[feature_name] = line_col[1]
+
+    return d
+
+
+def get_cadence_feature_pn_map(lic_lines) -> dict:
+    d = {}
+    product_id = None
+    for line in lic_lines:
+        if line.startswith("# Product Id"):
+            line_col = line.split(":")
+            line_col1 = line_col[1].split(",")
+            product_id = line_col1[0].strip()
+        else:
+            if "Feature:" in line:
+                line_col = line.split(":")
+                line_col1 = line_col[1].split("[")
+                feature_name = line_col1[0].strip()
+                d[feature_name] = product_id
+    return d
+
+def get_feature_pn_map(lic_lines: list) -> dict:
+    for line in lic_lines:
+        if "SYNOPSYS" in line:
+            return get_synopsys_feature_pn_map(lic_lines)
+
+    return get_cadence_feature_pn_map(lic_lines)
