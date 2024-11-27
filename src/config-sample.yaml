@@ -8,4 +8,4 @@ license:
   - name: <VENDOR2>
     lmutilpath: <DIR>/lmutil
     licensepath: <PORT2>@<SERVER2>
-    licensefilepath: <DIR>/License.txt
+    licensefilepath: <DIR>/cadence.txt
