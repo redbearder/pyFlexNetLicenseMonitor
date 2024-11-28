@@ -29,9 +29,11 @@ license:
   - name: <VENDOR1>
     lmutilpath: <DIR>/lmutil
     licensepath: <PORT1>@<SERVER1>
+    licensefilepath: <DIR>/snpslmd.txt
   - name: <VENDOR2>
     lmutilpath: <DIR>/lmutil
     licensepath: <PORT2>@<SERVER2>
+    licensefilepath: <DIR>/snpslmd.txt
 
 ```
 
